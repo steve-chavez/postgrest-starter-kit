@@ -26,21 +26,6 @@ grant usage on schema rabbitmq to anonymous;
 grant select, insert, update, delete on data.items to api;
 grant usage on data.items_id_seq to webuser;
 -- define the RLS policy
-create policy items_access_policy on data.items to api 
-using (
-	-- the authenticated users can see all his items
-	-- notice how the rule changes based on the current user id
-	-- which is specific to each individual request
-	(request.user_role() = 'webuser' and request.user_id() = owner_id)
-
-	or
-	-- everyone can see public items
-	(private = false)
-)
-with check (
-	-- authenticated users can only update/delete their items
-	(request.user_role() = 'webuser' and request.user_id() = owner_id)
-);
 
 -- While grants to the view owner and the RLS policy on the underlying table 
 -- takes care of what rows the view can see, we still need to define what 
@@ -61,23 +46,6 @@ grant usage on data.subitems_id_seq to webuser;
 create or replace function public_items() returns setof int as $$
     select id from data.items where private = false
 $$ stable security definer language sql;
-
-create policy subitems_access_policy on data.subitems to api 
-using (
-	-- the authenticated users can see all his items
-	(request.user_role() = 'webuser' and request.user_id() = owner_id)
-
-	or
-	-- everyone can see subitems of public items
-	-- while this rule is not very optimal, it shows that you can construct
-	-- it using any sql you like that can access data from other tables,
-	-- not just the current one
-	(item_id in (select public_items()))
-)
-with check (
-	-- authenticated users can only update/delete their subitems
-	(request.user_role() = 'webuser' and request.user_id() = owner_id)
-);
 
 grant select, insert, update, delete on api.subitems to webuser;
 grant select on api.subitems to anonymous;

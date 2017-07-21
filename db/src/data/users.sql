@@ -8,7 +8,6 @@ create table data.users ( -- df: mult=1.0
 	check (email ~* '^[A-Za-z0-9._%-]+@[A-Za-z0-9.-]+[.][A-Za-z]+$')
 );
 -- the default policy should be to enable RLS for all tables then selectively allow access to rows
-alter table data.users enable row level security;
 
 -- Below are table specific functions/triggers
 -- If you end up having a lot of them, it's a good idea to extract them in separate files
