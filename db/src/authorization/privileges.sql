@@ -33,6 +33,7 @@ with check (
 
 -- give access to the view owner to this table
 grant select, insert, update, delete on data.todo to api;
+grant select, insert, update, delete on data.application to api;
 grant usage on data.todo_id_seq to webuser;
 
 
@@ -42,6 +43,8 @@ grant usage on data.todo_id_seq to webuser;
 
 -- authenticated users can request/change all the columns for this view
 grant select, insert, update, delete on api.todos to webuser;
+
+grant select, insert, update, delete on api.applications to webuser;
 
 -- anonymous users can only request specific columns from this view
 grant select (id, todo) on api.todos to anonymous;
