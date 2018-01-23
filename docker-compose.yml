@@ -53,7 +53,7 @@ services:
   # After some processing/checks and transformation, the request is forwarded
   # to PostgREST down the stack.
   openresty:
-    image: openresty/openresty:jessie
+    image: ubergarm/openresty-nginx-jwt
     ports:
       - "8080:80"
     links:
