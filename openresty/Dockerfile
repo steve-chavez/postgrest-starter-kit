@@ -7,6 +7,12 @@
 
 FROM openresty/openresty:jessie
 
+RUN /usr/local/openresty/luajit/bin/luarocks install lua-resty-jwt
+RUN /usr/local/openresty/luajit/bin/luarocks install lua-resty-http
+RUN /usr/local/openresty/luajit/bin/luarocks install pgmoon
+
+RUN cp /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/ca-certificates.pem
+
 COPY entrypoint.sh /entrypoint.sh
 COPY nginx /usr/local/openresty/nginx
 COPY lualib /usr/local/openresty/lualib
