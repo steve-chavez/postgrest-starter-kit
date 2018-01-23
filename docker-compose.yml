@@ -53,7 +53,7 @@ services:
   # After some processing/checks and transformation, the request is forwarded
   # to PostgREST down the stack.
   openresty:
-    image: ubergarm/openresty-nginx-jwt
+    image: openresty
     ports:
       - "8080:80"
     links:
@@ -71,6 +71,7 @@ services:
       - DB_SCHEMA=${DB_SCHEMA}
       - DB_USER=${DB_USER}
       - DB_PASS=${DB_PASS}
+      - STRIPE_SECRET_KEY=${STRIPE_SECRET_KEY}
     volumes:
       - "./openresty/entrypoint.sh:/entrypoint.sh"
       - "./openresty/nginx/conf/nginx.conf:/usr/local/openresty/nginx/conf/nginx.conf"
