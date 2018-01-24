@@ -17,13 +17,16 @@ if not is_authorized then
   ngx.exit(ngx.HTTP_UNAUTHORIZED)
 end
 
-local amount, description = (function()
-  local item = ngx.req.get_uri_args().item
-  if item == "gpl" then return 1999, "GPL License"
-  elseif item == "mit" then return 9999, "MIT License"
-  elseif item == "regular-sub" then return 1999, "subZero regular subscription"
-  elseif item == "enterprise-sub" then return 2999, "subZero Enterprise subscription"
-  else return nil, nil
+local item_ids = {"gpl", "mit", "regular-sub", "enterprise-sub"};
+
+local item_id = ngx.req.get_uri_args().item
+
+local amount, description, is_plan = (function()
+  if item_id == item_ids[1] then return 1999, "GPL License", false
+  elseif item_id == item_ids[2] then return 9999, "MIT License", false
+  elseif item_id == item_ids[3] then return 1999, "subZero regular subscription", true
+  elseif item_id == item_ids[4] then return 2999, "subZero Enterprise subscription", true
+  else return nil, nil, nil
   end
 end)()
 
@@ -63,17 +66,31 @@ end
 local cjson = require 'cjson'
 local stripe_customer_id = cjson.decode(res.body)['id']
 
-local res = http_client:request_uri(stripe_endpoint .. '/charges', {
-  method = "POST",
-  headers = {
-      ['Authorization'] = stripe_auth_header,
-  },
-  body = ngx.encode_args({
-      amount = amount,
-      currency = 'usd',
-      description = description,
-      customer = stripe_customer_id
-  })
-})
+local res = (function()
+  if is_plan then
+    return http_client:request_uri(stripe_endpoint .. '/customers/' .. stripe_customer_id .. '/subscriptions', {
+      method = "POST",
+      headers = {
+          ['Authorization'] = stripe_auth_header,
+      },
+      body = ngx.encode_args({
+          plan = item_id
+      })
+    })
+  else
+    return http_client:request_uri(stripe_endpoint .. '/charges', {
+      method = "POST",
+      headers = {
+          ['Authorization'] = stripe_auth_header,
+      },
+      body = ngx.encode_args({
+          amount = amount,
+          currency = 'usd',
+          description = description,
+          customer = stripe_customer_id
+      })
+    })
+  end
+end)()
 
 ngx.say(res.body)
