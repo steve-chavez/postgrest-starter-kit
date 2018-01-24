@@ -72,6 +72,8 @@ services:
       - DB_USER=${DB_USER}
       - DB_PASS=${DB_PASS}
       - STRIPE_SECRET_KEY=${STRIPE_SECRET_KEY}
+      - SUPER_USER=${SUPER_USER}
+      - SUPER_USER_PASSWORD=${SUPER_USER_PASSWORD}
     volumes:
       - "./openresty/entrypoint.sh:/entrypoint.sh"
       - "./openresty/nginx/conf/nginx.conf:/usr/local/openresty/nginx/conf/nginx.conf"

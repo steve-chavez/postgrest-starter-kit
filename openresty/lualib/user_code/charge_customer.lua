@@ -93,4 +93,28 @@ local res = (function()
   end
 end)()
 
-ngx.say(res.body)
+if ngx.status > 206 then
+  return ngx.say(res.body)
+end
+
+local charge_id, cus_id = (function()
+  local body = cjson.decode(res.body)
+  return body['id'], body['customer']
+end)()
+
+local pgmoon = require("pgmoon")
+local pg = pgmoon.new({
+  host = os.getenv('DB_HOST'),
+  port = os.getenv('DB_PORT'),
+  database = os.getenv('DB_NAME'),
+  user = os.getenv('SUPER_USER'),
+  password = os.getenv('SUPER_USER_PASSWORD')
+})
+
+assert(pg:connect())
+
+assert(pg:query("insert into data.charge(id, cus_id) values(" ..  table.concat({pg:escape_literal(charge_id), pg:escape_literal(cus_id)}, ",") .. ")"))
+
+pg:keepalive()
+
+ngx.say(true)
