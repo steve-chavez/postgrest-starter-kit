@@ -15,6 +15,8 @@ COPY data.user (id,name,email,"password") FROM STDIN (FREEZE ON);
 1	alice	alice@email.com	pass
 2	bob	bob@email.com	pass
 \.
+
+INSERT INTO data.user(id, name, email, "password", "role") values (3, 'eve', 'eve@email.com', 'pass', 'payment_handler');
 -- 
 -- fill table data.todo (6)
 \echo # filling table data.todo (6)
