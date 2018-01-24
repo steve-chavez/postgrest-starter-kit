@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title></title>
+</head>
+<body>
+  <section style="display: flex; justify-content: space-between;">
+    <form action="/rest/rpc/charge_customer?item=gpl" method="POST">
+      <script
+        src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+        data-key="pk_test_7vO3s0rrhHLyVUIHwSxf9XI7"
+        data-amount="1999"
+        data-name="Demo Site"
+        data-description="Widget"
+        data-image="https://stripe.com/img/documentation/checkout/marketplace.png"
+        data-label="Buy GPL License"
+        data-locale="auto">
+      </script>
+    </form>
+    <form action="/rest/rpc/charge_customer?item=mit" method="POST">
+      <script
+        src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+        data-key="pk_test_7vO3s0rrhHLyVUIHwSxf9XI7"
+        data-amount="9999"
+        data-name="Demo Site"
+        data-description="Widget"
+        data-image="https://stripe.com/img/documentation/checkout/marketplace.png"
+        data-label="Buy MIT License"
+        data-locale="auto">
+      </script>
+    </form>
+    <form action="/rest/rpc/charge_customer?item=regular-sub" method="POST">
+      <script
+        src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+        data-key="pk_test_7vO3s0rrhHLyVUIHwSxf9XI7"
+        data-amount="1999"
+        data-name="Demo Site"
+        data-description="Widget"
+        data-image="https://stripe.com/img/documentation/checkout/marketplace.png"
+        data-label="Suscribe to subZero"
+        data-locale="auto">
+      </script>
+    </form>
+    <form action="/rest/rpc/charge_customer?item=enterprise-sub" method="POST">
+      <script
+        src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+        data-key="pk_test_7vO3s0rrhHLyVUIHwSxf9XI7"
+        data-amount="2999"
+        data-name="Demo Site"
+        data-description="Widget"
+        data-image="https://stripe.com/img/documentation/checkout/marketplace.png"
+        data-label="Suscribe to subZero Enterprise"
+        data-locale="auto">
+      </script>
+    </form>
+  </section>
+</body>
+</html>
