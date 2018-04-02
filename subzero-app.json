@@ -1,0 +1,9 @@
+{
+  "name": "postgreststarterkit",
+  "openresty_image_type": "default",
+  "db_location": "external",
+  "db_host": "ec2-18-188-58-187.us-east-2.compute.amazonaws.com",
+  "db_port": 5432,
+  "db_name": "app",
+  "version": "v0.0.1"
+}

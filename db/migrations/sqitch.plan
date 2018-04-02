@@ -1,0 +1,4 @@
+%syntax-version=1.0.0
+%project=app
+
+0000000001-initial 2018-03-30T23:33:58Z root <root@nixos> # Add 0000000001-initial migration
