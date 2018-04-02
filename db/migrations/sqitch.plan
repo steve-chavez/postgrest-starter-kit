@@ -2,3 +2,5 @@
 %project=app
 
 0000000001-initial 2018-03-30T23:33:58Z root <root@nixos> # Add 0000000001-initial migration
+0000000002-v0.0.2 2018-04-02T02:10:26Z root <root@nixos> # Add 0000000002-v0.0.2 migration
+0000000003-v0.0.3 2018-04-02T02:13:58Z root <root@nixos> # Add 0000000003-v0.0.3 migration

@@ -26,7 +26,7 @@ jobs:
     steps:
       - restore_cache:
           keys:
-          - v2-docker-images
+          - v3-docker-images
       - run:
           name: docker pull & save
           command: |
@@ -51,7 +51,7 @@ jobs:
       - save_cache:
           paths:
             - ~/.docker
-          key: v2-docker-images
+          key: v3-docker-images
 
   install_npm_dependencies:
     docker:
@@ -74,7 +74,7 @@ jobs:
       - checkout
       - restore_cache:
           keys:
-          - v2-docker-images
+          - v3-docker-images
       - restore_cache:
           keys:
           - v2-npm-dependencies-{{ checksum "package.json" }}
@@ -96,7 +96,7 @@ jobs:
     steps:
       - restore_cache:
           keys:
-          - v2-docker-images
+          - v3-docker-images
       - checkout
       - run:
           name: install subzero-cli
@@ -104,20 +104,21 @@ jobs:
       - deploy:
           name: deploy the latest database migrations
           command: |
-            subzero cloud app-deploy --dba $SUPER_USER --password $PRODUCTION_SUPER_USER_PASSWORD
+            subzero cloud app-deploy --dba $PRODUCTION_SUPER_USER --password $PRODUCTION_SUPER_USER_PASSWORD
       - deploy:
-          name: deploy openresty config and lua files 
+          name: deploy openresty config and lua files
           command: |
-             scp openresty/nginx/conf/nginx.conf ubuntu@$PRODUCTION_HOST:/tmp/
-             scp -r openresty/nginx/conf/includes ubuntu@$PRODUCTION_HOST:/tmp/includes
-             scp -r openresty/nginx/html ubuntu@$PRODUCTION_HOST:/tmp/html
-             scp -r openresty/lualib/user_code ubuntu@$PRODUCTION_HOST:/tmp/user_code
-             ssh -q ubuntu@$PRODUCTION_HOST <<EOF
+             scp openresty/nginx/conf/nginx.conf ubuntu@$PRODUCTION_DB_HOST:/tmp
+             scp -r openresty/nginx/conf/includes ubuntu@$PRODUCTION_DB_HOST:/tmp
+             scp -r openresty/nginx/html ubuntu@$PRODUCTION_DB_HOST:/tmp
+             scp -r openresty/lualib/user_code ubuntu@$PRODUCTION_DB_HOST:/tmp
+
+             ssh -q ubuntu@$PRODUCTION_DB_HOST <<EOF
                sudo su
                mv /tmp/nginx.conf /usr/local/openresty/nginx/conf/nginx.conf
-               mv /tmp/includes /usr/local/openresty/nginx/conf/includes
-               mv /tmp/html/* /usr/local/openresty/nginx/html
-               mv /tmp/user_code /usr/local/openresty/lualib/user_code
+               mkdir -p /usr/local/openresty/nginx/conf/includes/ && mv /tmp/includes/* /usr/local/openresty/nginx/conf/includes/
+               mv /tmp/html/* /usr/local/openresty/nginx/html/
+               mkdir -p /usr/local/openresty/lualib/user_code/ && mv /tmp/user_code/* /usr/local/openresty/lualib/user_code/
                systemctl reload openresty
              EOF
 
